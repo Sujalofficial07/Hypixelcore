@@ -1,47 +1,47 @@
 package com.sujal.skyblockcore;
 
-import com.sujal.skyblockcore.commands.AdminCoreCommand;
-import com.sujal.skyblockcore.commands.StatsCommand;
-import com.sujal.skyblockcore.listeners.CustomDamageListener;
-import com.sujal.skyblockcore.listeners.VanillaOverrideListener;
-import com.sujal.skyblockcore.managers.IndicatorManager;
+import com.sujal.skyblockcore.commands.*;
+import com.sujal.skyblockcore.listeners.*;
+import com.sujal.skyblockcore.managers.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class SkyblockCore extends JavaPlugin {
 
+    private StatManager statManager;
+    private ZoneManager zoneManager;
     private IndicatorManager indicatorManager;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
 
-        // Check for HypixelConnect dependency
         if (getServer().getPluginManager().getPlugin("HypixelConnect") == null) {
-            getLogger().severe("HypixelConnect not found! SkyblockCore will disable.");
+            getLogger().severe("HypixelConnect not found!");
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
 
         // Initialize Managers
-        this.indicatorManager = new IndicatorManager(this);
+        this.statManager = new StatManager(this);
+        this.zoneManager = new ZoneManager(this);
+        this.indicatorManager = new IndicatorManager(this); // Assuming this is retained from previous iteration
 
-        // Register Listeners
-        getServer().getPluginManager().registerEvents(new VanillaOverrideListener(), this);
-        getServer().getPluginManager().registerEvents(new CustomDamageListener(this), this);
+        // Register Events
+        getServer().getPluginManager().registerEvents(new MechanicsListener(this), this);
+        getServer().getPluginManager().registerEvents(new CombatListener(this), this);
 
         // Register Commands
-        getCommand("stats").setExecutor(new StatsCommand());
-        getCommand("sbadmin").setExecutor(new AdminCoreCommand());
+        getCommand("sb").setExecutor(new SbCommand());
+        getCommand("hub").setExecutor(new HubCommand(this));
+        getCommand("warp").setExecutor(new WarpCommand(this));
 
-        getLogger().info("SkyblockCore has been Enabled! Custom mechanics active.");
+        // Start Scoreboard/Actionbar Task (runs every 20 ticks / 1 sec)
+        new ScoreboardManager(this).runTaskTimer(this, 20L, 20L);
+
+        getLogger().info("SkyblockCore Enhanced Enabled!");
     }
 
-    @Override
-    public void onDisable() {
-        getLogger().info("SkyblockCore Disabled.");
-    }
-
-    public IndicatorManager getIndicatorManager() {
-        return indicatorManager;
-    }
+    public StatManager getStatManager() { return statManager; }
+    public ZoneManager getZoneManager() { return zoneManager; }
+    public IndicatorManager getIndicatorManager() { return indicatorManager; }
 }
