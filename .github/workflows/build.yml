@@ -37,5 +37,5 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: SkyblockCore-JAR
-        path: target/SkyblockCore-*.jar
+        path: target/HypixelCore-*.jar
         
