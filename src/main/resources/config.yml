@@ -1,0 +1,11 @@
+# SkyblockCore Configuration
+
+damage-indicators:
+  enabled: true
+  duration-ticks: 20
+
+mechanics:
+  disable-hunger: true
+  disable-fall-damage: true
+  disable-natural-spawns: true
+  
