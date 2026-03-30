@@ -1,0 +1,15 @@
+name: SkyblockCore
+version: 1.0.0
+main: com.sujal.skyblockcore.SkyblockCore
+api-version: '1.21'
+author: Sujal
+description: Core mechanics, damage system, and vanilla overrides.
+depend: [HypixelConnect]
+commands:
+  stats:
+    description: View your Skyblock stats.
+    aliases: [mystats]
+  sbadmin:
+    description: Admin commands for Skyblock.
+    permission: skyblock.admin
+    
